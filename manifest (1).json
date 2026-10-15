@@ -1,0 +1,11 @@
+{
+  "background_color": "#0808ff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "olegbawqneonplay",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "olegbawq.github",
+  "start_url": "/",
+  "theme_color": "#0b0b12"
+}
