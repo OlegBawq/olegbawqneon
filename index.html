@@ -1,0 +1,352 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b12">
+  <title>NeonPlay Casino — Мульти-Борд Лобби</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <canvas id="fx-canvas"></canvas>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32" width="24" height="24"><path fill="#101018" d="M6 4h6l8 13V4h6v24h-6l-8-13v13H6z"/></svg>
+        </span>
+        <span>NEON<span class="brand-light">PLAY</span><small>MEGA CASINO RU</small></span>
+      </a>
+
+      <div class="online-pill">
+        <span class="live-dot"></span>
+        <b id="online-count">7 842</b> онлайн
+      </div>
+
+      <div class="vip-box">
+        <div class="vip-row">
+          <span id="vip-rank">VIP 1 · Бронза</span>
+          <span id="vip-xp">0 / 1000 XP</span>
+        </div>
+        <div class="vip-bar"><div class="vip-fill" id="vip-fill"></div></div>
+      </div>
+
+      <div class="wallet">
+        <span class="wallet-label">Ваш баланс</span>
+        <strong><span id="balance">10 000 000</span> <small>$</small></strong>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn btn-bonus" id="claim-bonus">🎁 +100 000 $</button>
+        <button class="btn btn-secondary" id="sound-toggle" title="Звук">🔊</button>
+        <button class="btn btn-secondary" id="reset-demo">Сбросить</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <div class="eyebrow"><span class="live-dot"></span>МУЛЬТИ-ПОЛЯ · ДО 10 ЭКРАНОВ ОДНОВРЕМЕННО</div>
+          <h1>Играй на <span>нескольких полях</span> сразу.</h1>
+          <p>Выбирай 2, 5 или 10 ставок слева — игровое поле разделится на несколько экранов, которые крутятся одновременно и без задержек!</p>
+        </div>
+        <div class="hero-banners">
+          <div class="hero-card">
+            <svg viewBox="0 0 48 48" width="38" height="38"><circle cx="24" cy="24" r="20" fill="#b8ff5c22" stroke="#b8ff5c" stroke-width="2"/><path fill="#b8ff5c" d="M24 11l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z"/></svg>
+            <div><span>Мега Джекпот</span><strong id="jackpot-pool">284 950 000 $</strong></div>
+          </div>
+          <div class="hero-card">
+            <svg viewBox="0 0 48 48" width="38" height="38"><rect x="6" y="10" width="36" height="28" rx="6" fill="#9d78ff22" stroke="#9d78ff" stroke-width="2"/><circle cx="16" cy="24" r="4" fill="#b8ff5c"/><circle cx="24" cy="24" r="4" fill="#00d59a"/><circle cx="32" cy="24" r="4" fill="#f34b70"/></svg>
+            <div><span>Рекорд сессии</span><strong id="stat-best" class="win-text">0 $</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="game-nav" aria-label="Игры">
+        <button class="nav-item active" data-view="roulette"><span>◉</span> Рулетка</button>
+        <button class="nav-item" data-view="crash"><span>🚀</span> Краш</button>
+        <button class="nav-item" data-view="plinko"><span>⌁</span> Плинко</button>
+        <button class="nav-item" data-view="slots"><span>🎰</span> Слоты 777</button>
+        <button class="nav-item" data-view="mines"><span>💣</span> Мины</button>
+        <button class="nav-item" data-view="dice"><span>⚄</span> Кости</button>
+        <button class="nav-item" data-view="wheel"><span>🎡</span> Колесо ×50</button>
+        <button class="nav-item" data-view="coinflip"><span>🪙</span> Монетка</button>
+        <button class="nav-item" data-view="tower"><span>🏰</span> Башня</button>
+      </nav>
+
+      <section class="game-layout">
+        <aside class="side-panel panel">
+          <div class="panel-heading">
+            <div><span class="eyebrow"> ПАНЕЛЬ СТАВОК</span><h2>Настройки</h2></div>
+            <span class="chip">MULTI</span>
+          </div>
+
+          <label for="bet-amount">Ставка на 1 поле ($)</label>
+          <div class="bet-input-wrap">
+            <input id="bet-amount" type="number" min="1" max="10000000" value="100" step="1">
+            <span>$</span>
+          </div>
+
+          <div class="quick-bets">
+            <button data-bet="50">50</button>
+            <button data-bet="250">250</button>
+            <button data-bet="1000">1К</button>
+            <button data-bet="10000">10К</button>
+            <button data-mod="half">1/2</button>
+            <button data-mod="double">2×</button>
+            <button data-mod="plus1k">+1К</button>
+            <button data-mod="max">MAX</button>
+          </div>
+
+          <label>Одновременных полей (Мульти-экран)</label>
+          <div class="multi-selector" id="multi-selector">
+            <button class="multi-btn active" data-multi="1">1</button>
+            <button class="multi-btn" data-multi="2">2</button>
+            <button class="multi-btn" data-multi="3">3</button>
+            <button class="multi-btn" data-multi="5">5</button>
+            <button class="multi-btn" data-multi="10">10</button>
+          </div>
+          <input type="hidden" id="multi-count" value="1">
+
+          <div class="total-bet-box">
+            <span>Общая ставка за клик:</span>
+            <strong id="total-bet-display">100 $</strong>
+          </div>
+
+          <label class="inline-setting turbo-toggle">
+            <input id="turbo-mode" type="checkbox">
+            <span>⚡ Турбо-скорость</span>
+          </label>
+
+          <div class="panel-divider"></div>
+
+          <div class="mini-stats">
+            <div><span>Раундов</span><strong id="stat-rounds">0</strong></div>
+            <div><span>Чистый профит</span><strong id="stat-profit">0 $</strong></div>
+          </div>
+          <div class="mini-stats">
+            <div><span>Винрейт</span><strong id="stat-winrate">0%</strong></div>
+            <div><span>Активных полей</span><strong id="stat-boards" class="win-text">1×</strong></div>
+          </div>
+        </aside>
+
+        <section class="game-panel panel">
+          <div class="game-title-row">
+            <div>
+              <span class="eyebrow" id="game-kicker">КОЛЕСО УДАЧИ</span>
+              <h2 id="game-title">Рулетка <span>Дабл</span></h2>
+            </div>
+            <div class="title-badges">
+              <span class="status-pill"><i class="live-dot"></i> Полей: <b id="active-boards-pill">1</b></span>
+              <span class="status-pill">Без задержек</span>
+            </div>
+          </div>
+
+          <!-- 1. РУЛЕТКА (МУЛЬТИ-ДОРОЖКИ) -->
+          <div class="game-view active" id="view-roulette">
+            <div class="history-badges" id="roulette-history"></div>
+            <div class="multi-boards-container" id="roulette-boards"></div>
+            <div class="choice-row" id="roulette-choices">
+              <button class="color-choice selected red-choice" data-color="red">🔴 Красное <b>2×</b></button>
+              <button class="color-choice black-choice" data-color="black">⚫ Чёрное <b>2×</b></button>
+              <button class="color-choice green-choice" data-color="green">🟢 Зеро <b>14×</b></button>
+            </div>
+            <button class="btn btn-primary play-button" id="roulette-spin">Крутить все дорожки <span>↗</span></button>
+            <p class="result-line" id="roulette-result">Выбери 2, 5 или 10 полей слева — появится сразу несколько рулеток!</p>
+          </div>
+
+          <!-- 2. КРАШ (МУЛЬТИ-МОНИТОРЫ) -->
+          <div class="game-view" id="view-crash">
+            <div class="history-badges" id="crash-history"></div>
+            <div class="crash-top-controls">
+              <label class="inline-setting"><input id="crash-auto-check" type="checkbox" checked> Автовывод на всех экранах:</label>
+              <div class="bet-input-wrap compact">
+                <span>Коэф. ×</span>
+                <input id="crash-auto-val" type="number" min="1.1" max="500" step="0.1" value="2.00">
+              </div>
+              <button class="btn btn-cashout btn-sm" id="crash-cashout-all">Забрать всё сразу</button>
+            </div>
+            <div class="multi-boards-container" id="crash-boards"></div>
+            <button class="btn btn-primary play-button" id="crash-play">Запустить ракеты <span>🚀</span></button>
+            <p class="result-line" id="crash-result">Каждое поле летит со своим графиком — забирай вручную на карточке или всё сразу!</p>
+          </div>
+
+          <!-- 3. ПЛИНКО -->
+          <div class="game-view" id="view-plinko">
+            <div class="plinko-toolbar">
+              <label>Риск:
+                <select id="plinko-risk">
+                  <option value="low">Низкий</option>
+                  <option value="medium" selected>Средний</option>
+                  <option value="high">Высокий (29×)</option>
+                </select>
+              </label>
+              <div class="plinko-burst-btns">
+                <span>Залп без задержки:</span>
+                <button class="btn btn-secondary btn-sm" data-plinko-burst="1">1 шар</button>
+                <button class="btn btn-secondary btn-sm" data-plinko-burst="5">5 шаров</button>
+                <button class="btn btn-secondary btn-sm" data-plinko-burst="15">15 шаров</button>
+                <button class="btn btn-secondary btn-sm" data-plinko-burst="30">30 шаров</button>
+                <button class="btn btn-secondary btn-sm" data-plinko-burst="50">50 шаров</button>
+              </div>
+              <span class="active-balls-badge">В полёте: <b id="plinko-active-count">0</b></span>
+            </div>
+            <div class="plinko-stage"><canvas id="plinko-canvas"></canvas></div>
+            <div class="plinko-pockets" id="plinko-pockets"></div>
+            <button class="btn btn-primary play-button" id="plinko-play">Бросить шарики <span>⌁</span></button>
+            <p class="result-line" id="plinko-result">Спамь кнопкой без ожидания или запускай лавину по 50 шариков!</p>
+          </div>
+
+          <!-- 4. СЛОТЫ 777 (МУЛЬТИ-АВТОМАТЫ) -->
+          <div class="game-view" id="view-slots">
+            <div class="slots-paytable">
+              <span>7️⃣7️⃣7️⃣ <b>50×</b></span>
+              <span>💎💎💎 <b>20×</b></span>
+              <span>🔔🔔🔔 <b>10×</b></span>
+              <span>🍇🍇🍇 <b>5×</b></span>
+              <span>🍒🍒🍒 <b>3×</b></span>
+              <span>Любые 2 одинаковых <b>1.5×</b></span>
+            </div>
+            <div class="multi-boards-container" id="slots-boards"></div>
+            <button class="btn btn-primary play-button" id="slots-play">Крутить слоты <span>🎰</span></button>
+            <p class="result-line" id="slots-result">Крути от 1 до 10 слот-машин одновременно!</p>
+          </div>
+
+          <!-- 5. МИНЫ (МУЛЬТИ-ПОЛЯ) -->
+          <div class="game-view" id="view-mines">
+            <div class="mines-top">
+              <label>Бомб на каждом поле:
+                <select id="mine-count">
+                  <option value="1">1 бомба</option>
+                  <option value="3" selected>3 бомбы</option>
+                  <option value="5">5 бомб</option>
+                  <option value="8">8 бомб</option>
+                  <option value="12">12 бомб</option>
+                  <option value="20">20 бомб</option>
+                </select>
+              </label>
+              <label>Авто-шагов (для мульти-полей):
+                <select id="mine-steps">
+                  <option value="2">2 клетки</option>
+                  <option value="3" selected>3 клетки</option>
+                  <option value="5">5 клеток</option>
+                  <option value="8">8 клеток</option>
+                </select>
+              </label>
+              <div class="mines-quick-actions">
+                <button class="btn btn-secondary btn-sm" id="mines-random" disabled>🎲 Случайная</button>
+                <button class="btn btn-secondary btn-sm" id="mines-instant">⚡ Авто-залп на всех полях</button>
+              </div>
+            </div>
+            <div class="multi-boards-container" id="mines-boards"></div>
+            <div class="mines-info">
+              <span>Открыто: <b id="mines-opened">0</b></span>
+              <span>Множитель: <b id="mines-multiplier">1.00×</b></span>
+              <span>На кону: <b id="mines-potential">0 $</b></span>
+            </div>
+            <button class="btn btn-primary play-button" id="mines-play">Начать игру в Мины <span>💣</span></button>
+            <p class="result-line" id="mines-result">Играй вручную или выбери 5–10 полей для одновременного сапёра!</p>
+          </div>
+
+          <!-- 6. КОСТИ (МУЛЬТИ-ДОРОЖКИ) -->
+          <div class="game-view" id="view-dice">
+            <div class="multi-boards-container" id="dice-boards"></div>
+            <div class="dice-settings">
+              <label>Порог: <strong id="dice-target-label">50</strong>
+                <input id="dice-target" type="range" min="2" max="98" value="50">
+              </label>
+              <label>Условие
+                <select id="dice-direction">
+                  <option value="under">Меньше порога (&lt;)</option>
+                  <option value="over">Больше порога (&gt;)</option>
+                </select>
+              </label>
+            </div>
+            <div class="dice-metrics">
+              <div><span>Шанс</span><strong id="dice-chance">49%</strong></div>
+              <div><span>Множитель</span><strong id="dice-multiplier">1.96×</strong></div>
+              <div><span>Выигрыш с 1 поля</span><strong id="dice-win-preview">196 $</strong></div>
+            </div>
+            <button class="btn btn-primary play-button" id="dice-play">Бросить кости на всех полях <span>⚄</span></button>
+            <p class="result-line" id="dice-result">Настрой шанс и бросай до 10 дорожек одновременно!</p>
+          </div>
+
+          <!-- 7. КОЛЕСО ФОРТУНЫ X50 (МУЛЬТИ-КОЛЁСА) -->
+          <div class="game-view" id="view-wheel">
+            <div class="choice-row wheel-choices" id="wheel-choices">
+              <button class="color-choice selected" data-wheel="2" style="border-color:#9292a9">Серый <b>2×</b></button>
+              <button class="color-choice" data-wheel="3" style="border-color:#00d59a">Зелёный <b>3×</b></button>
+              <button class="color-choice" data-wheel="5" style="border-color:#9d78ff">Фиолет <b>5×</b></button>
+              <button class="color-choice" data-wheel="50" style="border-color:#b8ff5c">Золото <b>50×</b></button>
+            </div>
+            <div class="multi-boards-container" id="wheel-boards"></div>
+            <button class="btn btn-primary play-button" id="wheel-play">Вращать колёса <span>🎡</span></button>
+            <p class="result-line" id="wheel-result">Выбери множитель и вращай сразу до 10 колёс фортуны!</p>
+          </div>
+
+          <!-- 8. МОНЕТКА 3D (МУЛЬТИ-МОНЕТЫ) -->
+          <div class="game-view" id="view-coinflip">
+            <div class="choice-row" id="coin-choices" style="grid-template-columns:1fr 1fr">
+              <button class="color-choice selected" data-coin="heads">🦅 Орёл (Золото) <b>1.96×</b></button>
+              <button class="color-choice" data-coin="tails">⚡ Решка (Неон) <b>1.96×</b></button>
+            </div>
+            <div class="multi-boards-container" id="coin-boards"></div>
+            <button class="btn btn-primary play-button" id="coin-play">Подбросить монеты <span>🪙</span></button>
+            <p class="result-line" id="coin-result">Мгновенный подброс от 1 до 10 3D-монет!</p>
+          </div>
+
+          <!-- 9. БАШНЯ (МУЛЬТИ-БАШНИ) -->
+          <div class="game-view" id="view-tower">
+            <div class="mines-top">
+              <span>Каждый этаж умножает ставку на <b>1.45×</b> (Макс. 8 этажей — <b>19.5×</b>)</span>
+              <button class="btn btn-secondary btn-sm" id="tower-auto">⚡ Авто-штурм на всех башнях</button>
+            </div>
+            <div class="multi-boards-container" id="tower-boards"></div>
+            <button class="btn btn-primary play-button" id="tower-play">Начать штурм Башни <span>🏰</span></button>
+            <p class="result-line" id="tower-result">Поднимайся по ступеням вверх или запусти штурм сразу в 10 башнях!</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="history-grid">
+        <section class="history panel">
+          <div class="panel-heading">
+            <div><span class="eyebrow">ВАША ИСТОРИЯ</span><h2>Последние ставки</h2></div>
+            <span class="chip" id="history-count">0 записей</span>
+          </div>
+          <div class="history-table-wrap">
+            <table>
+              <thead><tr><th>Режим</th><th>Ставка</th><th>Исход</th><th>Выплата</th></tr></thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="history panel">
+          <div class="panel-heading">
+            <div><span class="eyebrow">СЕРВЕР В РЕАЛЬНОМ ВРЕМЕНИ</span><h2>Заносы игроков</h2></div>
+            <span class="chip">LIVE 24/7</span>
+          </div>
+          <div class="history-table-wrap">
+            <table>
+              <thead><tr><th>Игрок</th><th>Игра</th><th>Коэф.</th><th>Выигрыш</th></tr></thead>
+              <tbody id="live-feed-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer>
+      <span>NEONPLAY CASINO · MULTI-BOARD ENGINE</span>
+      <span>Только настоящие эмоции · До 10 одновременных игровых полей без задержек</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
+
